@@ -16,11 +16,13 @@ local function restore_win_opts(win_id, win_opts)
   end
 end
 
-M.pick_win = function()
+M.pick_win = function(opts)
+  opts = vim.tbl_deep_extend("force", M.opts, opts or {})
+
   local tabpage = vim.api.nvim_get_current_tabpage()
   local win_ids = vim.api.nvim_tabpage_list_wins(tabpage)
-  if M.opts.filter ~= nil then
-    win_ids = vim.tbl_filter(M.opts.filter, win_ids)
+  if opts.filter ~= nil then
+    win_ids = vim.tbl_filter(opts.filter, win_ids)
   end
 
   if #win_ids == 0 then
@@ -31,7 +33,7 @@ M.pick_win = function()
     vim.notify("Only one window", vim.log.levels.ERROR)
     return nil
   end
-  if #M.opts.chars < #win_ids then
+  if #opts.chars < #win_ids then
     vim.notify("Too many windows to pick from (Update `chars`)", vim.log.levels.ERROR)
     return nil
   end
@@ -42,15 +44,15 @@ M.pick_win = function()
   vim.o.laststatus = 2
 
   for i, id in ipairs(win_ids) do
-    local char = M.opts.chars:sub(i, i)
+    local char = opts.chars:sub(i, i)
     win_opts[id] = backup_win_opts(id)
     win_map[char] = id
 
     vim.api.nvim_win_set_option(id, "statusline", "%=" .. char .. "%=")
     if vim.api.nvim_get_current_win() ~= id then
-      vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. M.opts.hl_group .. ",StatusLineNC:" .. M.opts.hl_group)
-    elseif M.opts.hl_current ~= false then
-      local hl_group = M.opts.hl_current == true and M.opts.hl_group or M.opts.hl_current
+      vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. opts.hl_group .. ",StatusLineNC:" .. opts.hl_group)
+    elseif opts.hl_current ~= false then
+      local hl_group = opts.hl_current == true and opts.hl_group or opts.hl_current
       vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. hl_group .. ",StatusLineNC:" .. hl_group)
     end
   end
@@ -69,7 +71,7 @@ M.pick_win = function()
 
   vim.o.laststatus = laststatus
 
-  if not vim.tbl_contains(vim.split(M.opts.chars, ""), resp) then
+  if not vim.tbl_contains(vim.split(opts.chars, ""), resp) then
     vim.notify("Invalid input", vim.log.levels.ERROR)
     return nil
   end
