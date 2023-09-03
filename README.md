@@ -58,13 +58,12 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
         return not vim.tbl_contains({"noice", "notify"}, ft)
       end,
       hl_current = "CustomHlGroupFromMyAwesomeTheme",
-      hl_group = "lualine_a_normal", -- use lualine normal mode hl group
-      -- hl = {
-      --     group = "NvimTreeWinPickerStyle",
-      --     gui = "bold",
-      --     guifg = "#ededed",
-      --     guibg = "#4493c8",
-      -- },
+      hl = {
+          group = "NvimTreeWinPickerStyle",
+          gui = "bold",
+          guifg = "#ededed",
+          guibg = "#4493c8",
+      },
     },
     keys = {
       {
@@ -94,7 +93,10 @@ It can also be used as the window picker for nvim-tree
         open_file = {
           window_picker = {
             picker = function()
-              return require("win-picker").pick_win()
+              return require("win-picker").pick_win({
+                -- you can set the same options as in the setup except for `hl`
+                hl_group = "lualine_a_normal", -- use lualine normal mode hl group
+              })
             end,
           },
         },
