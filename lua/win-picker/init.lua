@@ -72,7 +72,7 @@ M.pick_win = function(opts)
   vim.o.laststatus = laststatus
 
   if not vim.tbl_contains(vim.split(opts.chars, ""), resp) then
-    vim.notify("Invalid input", vim.log.levels.ERROR)
+    vim.notify("Invalid input: '" .. resp .. "'", vim.log.levels.ERROR)
     return nil
   end
 
