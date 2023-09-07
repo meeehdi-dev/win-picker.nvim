@@ -63,7 +63,7 @@ M.pick_win = function(opts)
   while type(c) ~= "number" do
     c = vim.fn.getchar()
   end
-  local resp = (vim.fn.nr2char(c) or ""):upper()
+  local resp = (c == 27 and "") or (vim.fn.nr2char(c) or ""):upper() -- handle ESC separately
 
   for _, id in ipairs(win_ids) do
     restore_win_opts(id, win_opts[id])
@@ -71,6 +71,9 @@ M.pick_win = function(opts)
 
   vim.o.laststatus = laststatus
 
+  if resp == "" then
+    return nil
+  end
   if not vim.tbl_contains(vim.split(opts.chars, ""), resp) then
     vim.notify("Invalid input: '" .. resp .. "'", vim.log.levels.ERROR)
     return nil
