@@ -35,12 +35,13 @@ require('win-picker').setup({
 
 Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
 ```lua
-  return {
+  {
     'meeehdi-dev/win-picker.nvim',
     config = true, -- setup with default options
     keys = {
       {
-        "<C-w>!" = function()
+        "<C-w>!",
+        function()
           local win_id = require("win-picker").pick_win()
           if win_id then
             vim.api.nvim_set_current_win(win_id)
@@ -48,9 +49,9 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
         end,
       },
     },
-  },
+  }
   -- or
-  return {
+  {
     'meeehdi-dev/win-picker.nvim',
     opts = {
       chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
@@ -69,7 +70,8 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
     },
     keys = {
       {
-        "<leader>w" = function()
+        "<leader>w",
+        function()
           local win_id = require("win-picker").pick_win()
           if win_id then
             vim.api.nvim_set_current_win(win_id)
@@ -77,7 +79,7 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
         end,
       },
     },
-  },
+  }
 ```
 
 It can also be used as the window picker for nvim-tree
