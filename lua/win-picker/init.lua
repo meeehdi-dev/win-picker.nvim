@@ -25,12 +25,7 @@ M.pick_win = function(opts)
     win_ids = vim.tbl_filter(opts.filter, win_ids)
   end
 
-  if #win_ids == 0 then
-    vim.notify("No windows to pick from", vim.log.levels.ERROR)
-    return nil
-  end
-  if #win_ids == 1 then
-    vim.notify("Only one window", vim.log.levels.ERROR)
+  if #win_ids <= 1 then
     return nil
   end
   if #opts.chars < #win_ids then
