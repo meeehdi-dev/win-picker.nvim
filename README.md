@@ -3,6 +3,7 @@
 Win-picker allows you to quickly focus any window in your tabpane.
 
 It is inspired by the default window picker of [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua).
+[NEW] Float mode inspired by [nvim-window](https://github.com/yorickpeterse/nvim-window)
 
 ![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/33c06659-782b-40cb-8255-a61b120af159)
 
@@ -15,6 +16,7 @@ Here is the default configuration.
 - `hl_current` is either a boolean to highlight or not the current window using the hl_group or a string designating an other predefined highlight group.
 - `hl_group` is a string designating a predefined highlight group.
 - `hl` defines a new hl group.
+- `mode` can be either "statusline" or "float".
 
 ```lua
 require('win-picker').setup({
@@ -28,6 +30,7 @@ require('win-picker').setup({
     guifg = "#1d202f",
     guibg = "#7aa2f7",
   },
+  mode = "statusline",
 })
 ```
 
@@ -67,6 +70,7 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
           guifg = "#ededed",
           guibg = "#4493c8",
       },
+      mode = "float",
     },
     keys = {
       {

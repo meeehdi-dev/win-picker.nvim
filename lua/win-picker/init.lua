@@ -1,6 +1,6 @@
 local M = {}
 
-local backed_up_opts = {"winhl", "statusline"}
+local backed_up_opts = { "winhl", "statusline" }
 
 local function backup_win_opts(win_id)
   local win_opts = {}
@@ -35,20 +35,60 @@ M.pick_win = function(opts)
 
   local win_opts = {}
   local win_map = {}
+  local win_floats = {}
+
   local laststatus = vim.o.laststatus
   vim.o.laststatus = 2
 
   for i, id in ipairs(win_ids) do
     local char = opts.chars:sub(i, i)
-    win_opts[id] = backup_win_opts(id)
+
     win_map[char] = id
 
-    vim.api.nvim_win_set_option(id, "statusline", "%=" .. char .. "%=")
-    if vim.api.nvim_get_current_win() ~= id then
-      vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. opts.hl_group .. ",StatusLineNC:" .. opts.hl_group)
-    elseif opts.hl_current ~= false then
-      local hl_group = opts.hl_current == true and opts.hl_group or opts.hl_current
-      vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. hl_group .. ",StatusLineNC:" .. hl_group)
+    if opts.mode == "statusline" then
+      win_opts[id] = backup_win_opts(id)
+      vim.api.nvim_win_set_option(id, "statusline", "%=" .. char .. "%=")
+      if vim.api.nvim_get_current_win() ~= id then
+        vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. opts.hl_group .. ",StatusLineNC:" .. opts.hl_group)
+      elseif opts.hl_current ~= false then
+        local hl_group = opts.hl_current == true and opts.hl_group or opts.hl_current
+        vim.api.nvim_win_set_option(id, "winhl", "StatusLine:" .. hl_group .. ",StatusLineNC:" .. hl_group)
+      end
+    elseif opts.mode == "float" then
+      local bufnr = vim.api.nvim_create_buf(false, true)
+      if bufnr > 0 then
+        local win_width = vim.api.nvim_win_get_width(id)
+        local win_height = vim.api.nvim_win_get_height(id)
+
+        vim.api.nvim_buf_set_lines(
+          bufnr,
+          0,
+          -1,
+          true,
+          { '', '  ' .. char .. '  ', '' }
+        )
+
+        local float_window = vim.api.nvim_open_win(bufnr, false, {
+          relative = 'win',
+          win = id,
+          row = win_height / 2 - 1.5,
+          col = win_width / 2 - 2.5,
+          width = 5,
+          height = 3,
+          focusable = false,
+          style = 'minimal',
+          noautocmd = true,
+        })
+
+        vim.api.nvim_win_set_option(
+          float_window,
+          'winhl',
+          'Normal:' .. opts.hl_group
+        )
+        vim.api.nvim_win_set_option(float_window, 'diff', false)
+
+        win_floats[float_window] = bufnr
+      end
     end
   end
 
@@ -60,8 +100,16 @@ M.pick_win = function(opts)
   end
   local resp = (c == 27 and "") or (vim.fn.nr2char(c) or ""):upper() -- handle ESC separately
 
-  for _, id in ipairs(win_ids) do
-    restore_win_opts(id, win_opts[id])
+
+  if opts.mode == "statusline" then
+    for _, id in ipairs(win_ids) do
+      restore_win_opts(id, win_opts[id])
+    end
+  elseif opts.mode == "float" then
+    for window, bufnr in pairs(win_floats) do
+      vim.api.nvim_win_close(window, true)
+      vim.api.nvim_buf_delete(bufnr, { force = true })
+    end
   end
 
   vim.o.laststatus = laststatus
@@ -88,6 +136,7 @@ M.opts = {
     guifg = "#1d202f",
     guibg = "#7aa2f7",
   },
+  mode = "statusline"
 }
 
 function M.setup(opts)
@@ -95,7 +144,8 @@ function M.setup(opts)
 
   if M.opts.hl_group == nil then
     M.opts.hl_group = M.opts.hl.group
-    vim.api.nvim_command("hi def " .. M.opts.hl_group .. " gui=" .. M.opts.hl.gui .. " guifg=" .. M.opts.hl.guifg .. " guibg=" .. M.opts.hl.guibg)
+    vim.api.nvim_command("hi def " ..
+      M.opts.hl_group .. " gui=" .. M.opts.hl.gui .. " guifg=" .. M.opts.hl.guifg .. " guibg=" .. M.opts.hl.guibg)
   end
 end
 
