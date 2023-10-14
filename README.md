@@ -5,7 +5,8 @@ Win-picker allows you to quickly focus any window in your tabpane.
 It is inspired by the default window picker of [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua).
 [NEW] Float mode inspired by [nvim-window](https://github.com/yorickpeterse/nvim-window)
 
-![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/33c06659-782b-40cb-8255-a61b120af159)
+![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/baa59c56-c6a5-49df-882b-a9afc708df4e)
+
 
 ## Configuration
 
