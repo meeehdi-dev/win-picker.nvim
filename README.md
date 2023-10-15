@@ -8,7 +8,7 @@ And then I decided to move to the float mode inspired by [nvim-window](https://g
 ### So, why use this picker instead of those mentioned ones or any other one, you might ask?  
 I just wanted to create my first neovim plugin and keep it as simple as possible (<100LOC), so that anyone curious can tinker with it easily.
 
-![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/33c06659-782b-40cb-8255-a61b120af159)
+![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/baa59c56-c6a5-49df-882b-a9afc708df4e)
 
 ## Configuration
 
