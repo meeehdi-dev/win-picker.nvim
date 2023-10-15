@@ -2,8 +2,11 @@
 
 Win-picker allows you to quickly focus any window in your tabpane.
 
-It is inspired by the default window picker of [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua).
-[NEW] Float mode inspired by [nvim-window](https://github.com/yorickpeterse/nvim-window)
+It was first inspired by the default window picker of [nvim-tree](https://github.com/nvim-tree/nvim-tree.lua).  
+And then I decided to move to the float mode inspired by [nvim-window](https://github.com/yorickpeterse/nvim-window).
+
+### So, why use this picker instead of those mentioned ones or any other one, you might ask?  
+I just wanted to create my first neovim plugin and keep it as simple as possible (<100LOC), so that anyone curious can tinker with it easily.
 
 ![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/33c06659-782b-40cb-8255-a61b120af159)
 
@@ -13,24 +16,13 @@ Here is the default configuration.
 
 - `chars` is a string defining the characters used to select the window.
 - `filter` is a function receiving a win_id as parameter and returning a boolean to filter out a window.
-- `hl_current` is either a boolean to highlight or not the current window using the hl_group or a string designating an other predefined highlight group.
 - `hl_group` is a string designating a predefined highlight group.
-- `hl` defines a new hl group.
-- `mode` can be either "statusline" or "float".
 
 ```lua
 require('win-picker').setup({
   chars = "1234567890",
   filter = nil,
-  hl_current = false,
   hl_group = nil,
-  hl = {
-    group = "WinPicker",
-    gui = "bold",
-    guifg = "#1d202f",
-    guibg = "#7aa2f7",
-  },
-  mode = "statusline",
 })
 ```
 
@@ -61,17 +53,14 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
       filter = function(id)
         local bufid = vim.api.nvim_win_get_buf(id)
         local ft = vim.api.nvim_buf_get_option(bufid, "filetype")
-        return not vim.tbl_contains({"noice", "notify"}, ft)
+        return not vim.tbl_contains({"noice", "notify", ""}, ft)
       end,
-      hl_current = "CustomHlGroupFromMyAwesomeTheme",
-      hl = {
-          group = "NvimTreeWinPickerStyle",
-          gui = "bold",
-          guifg = "#ededed",
-          guibg = "#4493c8",
-      },
-      mode = "float",
+      hl_group = "WinPicker",
     },
+    config = function (_, opts)
+        vim.api.nvim_command("hi def WinPicker gui=bold guifg=#1d202f guibg=#7aa2f7")
+        require("win-picker").setup(opts)
+    end,
     keys = {
       {
         "<leader>w",
