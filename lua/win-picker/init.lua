@@ -9,8 +9,11 @@ M.pick_win = function(opts)
     win_ids = vim.tbl_filter(opts.filter, win_ids)
   end
 
-  if #win_ids <= 1 then
+  if #win_ids == 0 then
     return nil
+  end
+  if #win_ids == 1 then
+    return win_ids[1]
   end
   if #opts.chars < #win_ids then
     vim.notify("Too many windows to pick from (Update `chars`)", vim.log.levels.ERROR)
