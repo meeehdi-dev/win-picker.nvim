@@ -93,7 +93,7 @@ It can also be used as the window picker for nvim-tree
           window_picker = {
             picker = function()
               return require("win-picker").pick_win({
-                -- you can set the same options as in the setup except for `hl`
+                -- you can set the same options as in the config
                 hl_group = "lualine_a_normal", -- use lualine normal mode hl group
               })
             end,
