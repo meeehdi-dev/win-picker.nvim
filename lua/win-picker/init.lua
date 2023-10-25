@@ -5,9 +5,16 @@ M.pick_win = function(opts)
 
   local tabpage = vim.api.nvim_get_current_tabpage()
   local win_ids = vim.api.nvim_tabpage_list_wins(tabpage)
-  if opts.filter ~= nil then
-    win_ids = vim.tbl_filter(opts.filter, win_ids)
-  end
+  win_ids = vim.tbl_filter(function(win_id)
+    local cfg = vim.api.nvim_win_get_config(win_id)
+    if not cfg.focusable then
+      return false
+    end
+    if opts.filter ~= nil then
+      return opts.filter(win_id)
+    end
+    return true
+  end, win_ids)
 
   if #win_ids == 0 then
     return nil
@@ -56,7 +63,7 @@ M.pick_win = function(opts)
       vim.api.nvim_set_option_value(
         'winhl',
         'Normal:' .. opts.hl_group,
-        {win = float_win_id}
+        { win = float_win_id }
       )
     end
 

@@ -6,7 +6,7 @@ It was first inspired by the default window picker of [nvim-tree](https://github
 And then I decided to move to the float mode inspired by [nvim-window](https://github.com/yorickpeterse/nvim-window).
 
 ### So, why use this picker instead of those mentioned ones or any other one, you might ask?  
-I just wanted to create my first neovim plugin and keep it as simple as possible (<100LOC), so that anyone curious can tinker with it easily.
+I just wanted to create my first neovim plugin and keep it as simple as possible (~100LOC), so that anyone curious can tinker with it easily.
 
 
 ![demo](https://github.com/meeehdi-dev/win-picker.nvim/assets/3422399/4f3e2709-ffd2-489e-b9c5-a87d60f1afad)
@@ -55,7 +55,7 @@ Install and configure using [lazy.nvim](https://github.com/folke/lazy.nvim)
       filter = function(id)
         local bufid = vim.api.nvim_win_get_buf(id)
         local ft = vim.api.nvim_buf_get_option(bufid, "filetype")
-        return not vim.tbl_contains({"noice", "notify", ""}, ft)
+        return not vim.tbl_contains({ "noice", "notify" }, ft)
       end,
       hl_group = "WinPicker",
     },
