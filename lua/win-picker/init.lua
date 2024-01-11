@@ -23,7 +23,10 @@ M.pick_win = function(opts)
     return win_ids[1]
   end
   if #opts.chars < #win_ids then
-    vim.notify("Too many windows to pick from (Update `chars`)", vim.log.levels.ERROR)
+    vim.notify(
+      "Too many windows to pick from (Update `chars`)",
+      vim.log.levels.ERROR
+    )
     return nil
   end
 
@@ -43,26 +46,25 @@ M.pick_win = function(opts)
       0,
       -1,
       true,
-      { '', '  ' .. char .. '  ', '' }
+      { "", "  " .. char .. "  ", "" }
     )
 
     local float_win_id = vim.api.nvim_open_win(float_buf_id, false, {
-      relative = 'win',
+      relative = "win",
       win = win_id,
       row = win_height / 2 - 1.5,
       col = win_width / 2 - 2.5,
       width = 5,
       height = 3,
       focusable = false,
-      style = 'minimal',
+      style = "minimal",
       noautocmd = true,
     })
 
-
     if opts.hl_group ~= nil then
       vim.api.nvim_set_option_value(
-        'winhl',
-        'Normal:' .. opts.hl_group,
+        "winhl",
+        "Normal:" .. opts.hl_group,
         { win = float_win_id }
       )
     end
@@ -78,7 +80,6 @@ M.pick_win = function(opts)
     c = vim.fn.getchar()
   end
   local resp = (c == 27 and "") or (vim.fn.nr2char(c) or ""):upper() -- handle ESC separately
-
 
   for float_win_id, float_buf_id in pairs(win_float_map) do
     vim.api.nvim_win_close(float_win_id, true)
