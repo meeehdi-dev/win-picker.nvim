@@ -1,6 +1,16 @@
 local M = {}
 
-M.pick_win = function(opts)
+---@alias Options { chars: string, filter: function | nil, hl_group: string | nil }
+
+---@type Options
+M.opts = {
+  chars = "1234567890",
+  filter = nil,
+  hl_group = nil,
+}
+
+---@param opts Options | nil
+function M.pick_win(opts)
   opts = vim.tbl_deep_extend("force", M.opts, opts or {})
 
   local tabpage = vim.api.nvim_get_current_tabpage()
@@ -97,12 +107,7 @@ M.pick_win = function(opts)
   return win_map[resp]
 end
 
-M.opts = {
-  chars = "1234567890",
-  filter = nil,
-  hl_group = nil,
-}
-
+---@param opts Options
 function M.setup(opts)
   M.opts = vim.tbl_deep_extend("force", M.opts, opts or {})
 end
