@@ -1,17 +1,9 @@
-local M = {}
+local options = require("win-picker.options")
 
----@alias Options { chars: string, filter: function | nil, hl_group: string | nil }
-
----@type Options
-M.opts = {
-  chars = "1234567890",
-  filter = nil,
-  hl_group = nil,
-}
-
----@param opts Options | nil
-function M.pick_win(opts)
-  opts = vim.tbl_deep_extend("force", M.opts, opts or {})
+---@param custom_opts Options | nil
+---@return number | nil
+local function pick_win(custom_opts)
+  local opts = vim.tbl_deep_extend("force", options.get(), custom_opts or {})
 
   local tabpage = vim.api.nvim_get_current_tabpage()
   local win_ids = vim.api.nvim_tabpage_list_wins(tabpage)
@@ -104,12 +96,25 @@ function M.pick_win(opts)
     return nil
   end
 
-  return win_map[resp]
+  local win_id = win_map[resp]
+
+  if opts.callback then
+    opts.callback(win_id)
+  else
+    if win_id then
+      vim.api.nvim_set_current_win(win_id)
+    end
+  end
+
+  return win_id
 end
 
 ---@param opts Options
-function M.setup(opts)
-  M.opts = vim.tbl_deep_extend("force", M.opts, opts or {})
+local function setup(opts)
+  options.set(opts)
 end
 
-return M
+return {
+  pick_win = pick_win,
+  setup = setup,
+}
